@@ -12,13 +12,14 @@ unsigned long btSendInterval;
 const int analogPin = 34;
 int analogData = 0;
 uint32_t package = 0;
+int i = 0;
 
 void SendData_Bluetooth();
 void SendData_Serial();
 void setup()
 {
   // put your setup code here, to run once:
-  Serial.begin(9600);
+  Serial.begin(115200);
   serialBT.begin("ESP32");
   Serial.println("Started");
   dataReceived = 0;
@@ -31,8 +32,8 @@ void loop()
 {
   // put your main code here, to run repeatedly:
 
-  analogData = analogRead(analogPin);
-
+  analogData = analogRead(analogPin) + i;
+  
   SendData_Bluetooth();
   SendData_Serial();
 }
@@ -44,6 +45,7 @@ void SendData_Bluetooth()
     delay(1000);
     return;
   }
+  i++;
   // Sending 16 bits of data over bluetooth.
   uint8_t data1 = analogData & 0xFF;        // lsb
   uint8_t data2 = (analogData >> 8) & 0xFF; // msb
